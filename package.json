@@ -1,13 +1,16 @@
 {
   "name": "awesome-angular",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+   "docker-build": "docker build -t pmarti20/awesomeproject:${VERSION:=0}.${COMMIT:=0} --build-arg VERSION=${VERSION:=0} --build-arg COMMIT=${COMMIT:=0} -f ./Dockerfile dist/awesomeAngular",
+    "docker-push": "docker push pmarti20/awesomeproject:${VERSION:=0}.${COMMIT:=0}",
+    "docker": "npm run docker-build && npm run docker-push"
   },
   "private": true,
   "dependencies": {
