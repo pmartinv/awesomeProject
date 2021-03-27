@@ -19,7 +19,7 @@ pipeline{
                                node -pe "require('./package.json').version"
                                 """).trim()
                      commit=sh(returnStdout:true,script:"git rev-parse --short HEAD").trim()
-                     dockerImage=docker.build "pmarti20/awesomeproject"
+                     dockerImage=docker.build "pmarti20/awesomeproject","--build-arg COMMIT=$commit --build-arg VERSION=$version -f ./Dockerfile dist/awesomeAngular"
                      dockerImage.push("$version.$commit")
                   }
               }
