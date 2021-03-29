@@ -15,12 +15,12 @@ pipeline{
           steps{
               script{
                   docker.withRegistry('','dockerhubCredential'){
-                     version=sh(returnStdout:true,script:"""
+                     env.IMAGE_VERSION=sh(returnStdout:true,script:"""
                                node -pe "require('./package.json').version"
                                 """).trim()
-                     commit=sh(returnStdout:true,script:"git rev-parse --short HEAD").trim()
-                     dockerImage=docker.build "pmarti20/awesomeproject","--build-arg COMMIT=$commit --build-arg VERSION=$version -f ./Dockerfile dist/awesomeAngular"
-                     dockerImage.push("$version.$commit")
+                     env.IMAGE_COMMIT=sh(returnStdout:true,script:"git rev-parse --short HEAD").trim()
+                     dockerImage=docker.build "pmarti20/awesomeproject","--build-arg COMMIT=${env.IMAGE_COMMIT} --build-arg VERSION=${env.IMAGE_VERSION} -f ./Dockerfile dist/awesomeAngular"
+                    dockerImage.push("${env.IMAGE_VERSION}.${env.IMAGE_COMMIT}")
                   }
               }
           }
@@ -28,7 +28,7 @@ pipeline{
       stage('test image'){
           steps{
               script{
-                  docker.image("pmarti20/awesomeproject:{env.version}.${env.commit}").withRun('-p 8090:80'){
+                  docker.image("pmarti20/awesomeproject:${env.IMAGE_VERSION}.${env.IMAGE_COMMIT}").withRun('-p 8090:80'){
                       sh "uname -a"
                       sh "curl -v --silent http://locahost:8090 | grep -i awesomeAngular"
                   }
