@@ -30,7 +30,7 @@ pipeline{
               script{
                   docker.image("pmarti20/awesomeproject:${env.IMAGE_VERSION}.${env.IMAGE_COMMIT}").withRun('-p 8090:80'){
                       sh "uname -a"
-                      sh "curl -v --silent http://locahost:8090 | grep -i awesomeAngular"
+                      sh "curl -v --silent http://localhost:8090 2>&1 | grep AwesomeAngular"
                   }
               }
            }
